@@ -72,12 +72,12 @@
 			<artifactId>openpdf</artifactId>
 			<version>1.2.12</version>
 		</dependency>
-				
-				<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>5.2.3</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>5.2.3</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
@@ -88,36 +88,67 @@
 		</dependency>
 
 		<dependency>
-	   		<groupId>net.sf.supercsv</groupId>
-	   		<artifactId>super-csv</artifactId>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv</artifactId>
 			<version>2.4.0</version>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-oxm -->
 		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-oxm</artifactId>
-		    
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
-		    <version>2.4.0-b180830.0359</version>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.4.0-b180830.0359</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
 		<dependency>
-		    <groupId>org.glassfish.jaxb</groupId>
-		    <artifactId>jaxb-runtime</artifactId>
-		   
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+
 		</dependency>
 
-		
-		
-		
-		
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>JJWT_RELEASE_VERSION</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>JJWT_RELEASE_VERSION</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is
+			preferred -->
+			<version>JJWT_RELEASE_VERSION</version>
+			<scope>runtime</scope>
+		</dependency>
+				<!-- Uncomment this next dependency if you are using:
+		     - JDK 10 or earlier, and you want to use RSASSA-PSS (PS256, PS384, PS512)
+				signature algorithms.  
+		     - JDK 10 or earlier, and you want to use EdECDH (X25519 or X448) Elliptic Curve
+				Diffie-Hellman encryption.
+		     - JDK 14 or earlier, and you want to use EdDSA (Ed25519 or Ed448) Elliptic
+				Curve signature algorithms.    
+		     It is unnecessary for these algorithms on JDK 15 or later.
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk15on</artifactId>
+		    <version>1.70</version>
+		    <scope>runtime</scope>
+		</dependency>
+		-->
+
+
 	</dependencies>
 
 

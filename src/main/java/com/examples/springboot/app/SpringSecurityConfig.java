@@ -49,8 +49,12 @@ public class SpringSecurityConfig {
 					.formLogin(formLogin -> formLogin.successHandler(successHandler).loginPage("/login")
 					//.logout((logout) -> logout.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
 					//.logout((logout) -> logout.logoutUrl("/","/login"))
-					.permitAll())
+			
+							.permitAll())
+					.csrf(csrf -> csrf.disable())
 					.rememberMe(Customizer.withDefaults());
+			
+					
 			;
 
 			return http.build();
