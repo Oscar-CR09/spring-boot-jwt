@@ -4,18 +4,21 @@ package com.examples.springboot.app;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 //import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
-import com.examples.springboot.app.auth.handler.LoginSuccesHandler;
+import com.examples.springboot.app.auth.filter.JWTAuthenticationFilter;
+//import com.examples.springboot.app.auth.handler.LoginSuccesHandler;
 import com.examples.springboot.app.models.service.JpaUserDetailsService;
 
 
@@ -23,8 +26,8 @@ import com.examples.springboot.app.models.service.JpaUserDetailsService;
 @Configuration
 public class SpringSecurityConfig {
 
-	@Autowired
-	private LoginSuccesHandler successHandler;
+	//@Autowired
+	//private LoginSuccesHandler successHandler;
 
 	
 	@Autowired
@@ -35,6 +38,9 @@ public class SpringSecurityConfig {
 
     @Autowired
     private JpaUserDetailsService userDetailsService;
+
+
+	public AuthenticationManager authenticationManager;
     
 	@Configuration
 	@EnableWebSecurity
@@ -46,12 +52,14 @@ public class SpringSecurityConfig {
 					.requestMatchers("/", "/css/**","/js/**","/images/**","/listar**","/locale","/api/clientes/**").permitAll()
 					.anyRequest().authenticated())
 				
-					.exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/error_403"))
-					.formLogin(formLogin -> formLogin.successHandler(successHandler).loginPage("/login")
+					//.exceptionHandling((exceptionHandling) -> exceptionHandling.accessDeniedPage("/error_403"))
+					//.formLogin(formLogin -> formLogin.successHandler(successHandler).loginPage("/login")
 					//.logout((logout) -> logout.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
 					//.logout((logout) -> logout.logoutUrl("/","/login"))
 			
-							.permitAll())
+					//		.permitAll())
+			
+					.addFilter(new JWTAuthenticationFilter(authenticationManager))
 					.csrf(csrf -> csrf.disable())
 					.sessionManagement((session) -> session
 				    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
