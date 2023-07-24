@@ -1,22 +1,11 @@
 package com.examples.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import com.examples.springboot.app.auth.SimpleGrantedAuthorityMixin;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.examples.springboot.app.auth.service.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,10 +13,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-
-	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+	private JWTService jwtService;
+	
+	public JWTAuthorizationFilter(AuthenticationManager authenticationManager,JWTService jwtService) {
 		super(authenticationManager);
-		
+		this.jwtService = jwtService;
 	}
 
 	@Override
@@ -40,28 +30,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 			return;
 		}
 		
-		boolean validoToken;
-		Claims token = null;
-		
-		try {
-			Jwts.parser()
-			.setSigningKey("algunaLlaveSecreta.12345".getBytes())
-			.parseClaimsJws(header.replace("Bearer", ""))
-			.getBody();
-			validoToken = true;
-		} catch (JwtException e) {
-			validoToken=false;
-		}
+	
 		UsernamePasswordAuthenticationToken authentication = null;
-		if (validoToken) {
-			String username = token.getSubject();
-			Object roles = token.get("authorities");
-			
-			Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper()
-					.addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
-					.readValue(roles.toString(), SimpleGrantedAuthority[].class));
-					
-			authentication = new UsernamePasswordAuthenticationToken(username, null,authorities);
+		if (jwtService.validate(header)) {
+		
+			authentication = new UsernamePasswordAuthenticationToken(jwtService.getUsername(header), null,jwtService.getRoles(header));
 		}
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		chain.doFilter(request, response);
