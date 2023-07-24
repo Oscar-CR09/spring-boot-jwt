@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.examples.springboot.app.auth.SimpleGrantedAuthorityMixin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -22,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+
 
 	public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
 		super(authenticationManager);
@@ -55,7 +57,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 			String username = token.getSubject();
 			Object roles = token.get("authorities");
 			
-			Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().readValue(roles.toString(), SimpleGrantedAuthority[].class));
+			Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper()
+					.addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
+					.readValue(roles.toString(), SimpleGrantedAuthority[].class));
 					
 			authentication = new UsernamePasswordAuthenticationToken(username, null,authorities);
 		}
