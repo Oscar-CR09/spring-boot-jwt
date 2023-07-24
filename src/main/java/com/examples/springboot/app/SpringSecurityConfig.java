@@ -1,6 +1,5 @@
 package com.examples.springboot.app;
 
-//import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,15 +9,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
-//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-
 import com.examples.springboot.app.auth.filter.JWTAuthenticationFilter;
-//import com.examples.springboot.app.auth.handler.LoginSuccesHandler;
+import com.examples.springboot.app.auth.filter.JWTAuthorizationFilter;
 import com.examples.springboot.app.models.service.JpaUserDetailsService;
 
 
@@ -26,21 +21,11 @@ import com.examples.springboot.app.models.service.JpaUserDetailsService;
 @Configuration
 public class SpringSecurityConfig {
 
-	//@Autowired
-	//private LoginSuccesHandler successHandler;
-
-	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
-    //@Autowired
-   // private DataSource dataSource;
-
     @Autowired
     private JpaUserDetailsService userDetailsService;
-
-
-	public AuthenticationManager authenticationManager;
     
 	@Configuration
 	@EnableWebSecurity
@@ -58,8 +43,8 @@ public class SpringSecurityConfig {
 					//.logout((logout) -> logout.logoutUrl("/","/login"))
 			
 					//		.permitAll())
-			
-					.addFilter(new JWTAuthenticationFilter(authenticationManager))
+					.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+					.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 					.csrf(csrf -> csrf.disable())
 					.sessionManagement((session) -> session
 				    .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -81,6 +66,10 @@ public class SpringSecurityConfig {
     	//.dataSource(dataSource)
 		//.usersByUsernameQuery("select usuario, passoword, enabled from usuarios where usuario=?")
 		//.authoritiesByUsernameQuery("select u.usuario, a.authority from authorities a inner join usuarios u on (a.user_id=u.id) where u.usuario=?");
+	}
+	public AuthenticationManager authenticationManager() {
+		
+		return null;
 	}
 
 }
