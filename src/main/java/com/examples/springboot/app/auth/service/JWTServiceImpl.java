@@ -21,11 +21,16 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JWTServiceImpl implements JWTService {
-
+	
 	private static final Key SECRET_KEY = null;
 	SecretKey secretKey = new SecretKeySpec("algunaLlaveSecreta.12345".getBytes(), 
 			SignatureAlgorithm.HS256.getJcaName());
 
+	public static final long EXPIRATION_DATE =  3600000;
+	public static final String TOKEN_PREFIX = "Bearer ";
+	public static final String HEADER_STRING = "Authorization";
+	
+	
 	@Override
 	public String create(Authentication auth) throws JsonProcessingException {
 		String username = ((User) auth.getPrincipal()).getUsername();
@@ -40,7 +45,7 @@ public class JWTServiceImpl implements JWTService {
                  .setSubject(username)
                  .signWith(SECRET_KEY)
                  .setIssuedAt(new Date())
-                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE))
                  .compact();
 		return null;
 	}
@@ -87,8 +92,8 @@ public class JWTServiceImpl implements JWTService {
 
 	@Override
 	public String resolver(String token) {
-		if (token != null && token.startsWith("Bearer")) {
-			return token.replace("Bearer", "");
+		if (token != null && token.startsWith(TOKEN_PREFIX)) {
+			return token.replace(TOKEN_PREFIX, "");
 		}
 		return null;
 	}
